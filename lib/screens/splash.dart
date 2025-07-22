@@ -46,6 +46,16 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image(image: AssetImage('/Users/jawadulhassan/Downloads/images-4.png')),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text("Minhas Construction Associates", style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                ),)
+
+              ],
+            )
           ],
         )
       ),

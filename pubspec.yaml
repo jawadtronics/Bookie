@@ -88,3 +88,26 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+#  async {
+#  if (area.text.trim().isNotEmpty  && name.text.trim().isNotEmpty ) {
+#  try {
+#  final response = await Supabase.instance.client
+#  .from('contractors')
+#  .insert({
+#'name': name.text,
+#'area': area.text,
+#})
+#  .select();
+#
+#  if (response != null) {
+#  // Success - go back to previous screen
+#  Navigator.pop(context);
+#}
+#} catch (error) {
+#print("Error adding contractor: $error");
+#  ScaffoldMessenger.of(context).showSnackBar(
+#  SnackBar(
+#content: Text('Failed to add contractor')),
+#  );
+#}
