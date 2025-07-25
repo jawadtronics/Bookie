@@ -1,44 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:untitled/screens/resources.dart';
 
 void main() {
   runApp(opening());
 }
-
 class personalPage extends StatefulWidget {
-  const personalPage({super.key});
+  final int id;
+  final String name;
+  final String phone;
+  final String area;
+
+  const personalPage({
+    super.key,
+    required this.id,
+    required this.name,
+    required this.phone,
+    required this.area,
+  });
 
   @override
   State<personalPage> createState() => _personalPageState();
+
 }
 
+
 class _personalPageState extends State<personalPage> {
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: Column(
           children: [
-          Container(
-          height: 190,
-          width: 400,
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-              color: Colors.amber,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  blurStyle: BlurStyle.normal,
-                  blurRadius: 10,
-                  spreadRadius: 4,
-                  color: Colors.black12,
-                ),
-              ]
-          ),
-            child: Column(
-              children: [
-                Text('name')
-              ],
+          Padding(
+            padding: const EdgeInsets.only(top: 40,),
+            child: Container(
+            height: 190,
+            width: 400,
+            // padding: const EdgeInsets.only(top: 90,bottom: 20,left: 20,right: 20 ),
+            decoration: BoxDecoration(
+                color: Colors.amber,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    blurStyle: BlurStyle.normal,
+                    blurRadius: 10,
+                    spreadRadius: 4,
+                    color: Colors.black12,
+                  ),
+                ]
+            ),
+              child: Column(
+                children: [
+                  Text('${widget.name}', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),),
+                  Text('${widget.name} ' + "Hello", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),),
+                  ElevatedButton(onPressed: (){}, child: Text("Add Credit")),
+                  ElevatedButton(onPressed: (){}, child: Text("Add Debit"))
+                ],
+              ),
             ),
           )
           ],
@@ -173,6 +197,26 @@ class _openingState extends State<opening> {
       home: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          title: Center(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> resources()));
+              },
+              child: Text("Resources"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+
+                ),
+              ),
+            ),
+          ),
           backgroundColor: Colors.amber,
         ),
         // appBar: AppBar(
@@ -239,6 +283,7 @@ class _openingState extends State<opening> {
                           ),
                         ),
                       ),
+
                        Container(
                          height: 40,
                        ),
@@ -296,7 +341,12 @@ class _openingState extends State<opening> {
                           child: ListTile(
                             title: Text(c['name'] ?? 'No Name'),
                             subtitle: Text("${c['phone']} | ${c['area']}"),
-                            onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>personalPage()));},
+                            onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>personalPage(
+                              id: c['id'], // 👈 This line is new
+                              name: c['name'] ?? 'No Name',
+                              phone: c['phone'].toString() ?? 'No Phone',
+                              area: c['area'] ?? 'No Area',
+                            )));},
                            ),
                         );
                       },
