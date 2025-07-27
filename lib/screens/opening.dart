@@ -82,6 +82,59 @@ class _personalPageState extends State<personalPage> {
                 children: [
                   // Text('${widget.name}', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),),
                   Text("Hello " + '${widget.name}' , style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),),
+                  FutureBuilder<List<Map<String, dynamic>>>(
+                    future: _transactionsFuture,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return SizedBox(); // Don't show totals if no data
+                      }
+
+                      final transactions = snapshot.data!;
+                      double totalGiven = 0;
+                      double totalReceived = 0;
+
+                      for (final tx in transactions) {
+                        final isReceived = tx['transaction_type'] == 2;
+
+                        if (isReceived) {
+                          final recAmount = tx['rec_amount'];
+                          if (recAmount != null) totalReceived += recAmount;
+                        } else {
+                          final quantity = tx['quantity'];
+                          final rate = tx['rate'];
+                          if (quantity != null && rate != null) {
+                            totalGiven += quantity * rate;
+                          }
+                        }
+                      }
+
+                      final netTotal = totalReceived - totalGiven;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Column(
+                          children: [
+                            Text(
+                              "Given: Rs ${totalGiven.toStringAsFixed(0)}",
+                              style: TextStyle(color: Colors.red, fontSize: 16),
+                            ),
+                            Text(
+                              "Received: Rs ${totalReceived.toStringAsFixed(0)}",
+                              style: TextStyle(color: Colors.green, fontSize: 16),
+                            ),
+                            Text(
+                              "Net: Rs ${netTotal.toStringAsFixed(0)}",
+                              style: TextStyle(
+                                color: netTotal >= 0 ? Colors.green : Colors.red,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                   Container(
                     child:
                     Row(
@@ -148,17 +201,49 @@ class _personalPageState extends State<personalPage> {
                   }
 
                   final transactions = snapshot.data!;
+                  double totalGiven = 0;
+                  double totalReceived = 0;
+
+                  for (final tx in transactions) {
+                    final isReceived = tx['transaction_type'] == 2;
+
+                    if (isReceived) {
+                      final recAmount = tx['rec_amount'];
+                      if (recAmount != null) {
+                        totalReceived += recAmount;
+                      }
+                    } else {
+                      final quantity = tx['quantity'];
+                      final rate = tx['rate'];
+                      if (quantity != null && rate != null) {
+                        totalGiven += quantity * rate;
+                      }
+                    }
+                  }
+
+                  final netTotal = totalReceived - totalGiven;
                   return ListView.builder(
                     itemCount: transactions.length,
                     itemBuilder: (context, index) {
                       final tx = transactions[index];
                       final isReceived = tx['transaction_type'] == 2;
 
+                      final recAmount = tx['rec_amount'];
+                      final quantity = tx['quantity'];
+                      final rate = tx['rate'];
+                      final description = tx['description'] ?? 'No description';
+
+                      final gaveAmount = (quantity != null && rate != null)
+                          ? (quantity * rate)
+                          : null;
+
                       return Card(
                         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         child: ListTile(
                           title: Text(
-                            'Amount: ${tx['rec_amount']}',
+                            isReceived
+                                ? 'Amount Recieved: $recAmount'
+                                : 'Amount Gave: ${gaveAmount ?? 'N/A'}',
                             style: TextStyle(
                               color: isReceived ? Colors.green : Colors.red,
                               fontWeight: FontWeight.bold,
@@ -167,9 +252,11 @@ class _personalPageState extends State<personalPage> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Description: ${tx['description'] ?? 'No description'}'),
-                              if (!isReceived)
-                                Text('Quantity: ${tx['quantity'] ?? 'N/A'}'),
+                              Text('Description: $description'),
+                              if (!isReceived) ...[
+                                Text('Rate: ${rate ?? 'N/A'}'),
+                                Text('Quantity: ${quantity ?? 'N/A'}'),
+                              ],
                             ],
                           ),
                         ),
