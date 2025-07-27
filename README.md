@@ -26,11 +26,31 @@ A sleek and intuitive mobile application built with **Flutter** and powered by *
 
 ---
 
+## 🆕 New Features
+
+- 📜 **Transaction List with Color-Coded Entries**  
+  Transactions marked as "Received" (`type = 2`) show in green; "Given" (`type = 1`) show in red.
+
+- 🧮 **Auto-Calculated Totals & Net Balance Display**  
+  Each contractor page displays total "Given", total "Received", and auto-calculates the **Net Total**.
+
+- 🗂️ **Detailed Transaction Cards**  
+  For "Given" transactions: show Quantity, Rate, Amount, and Description.  
+  For "Received" transactions: show Amount and Description.
+
+- 🔄 **State Refresh on Return**  
+  When returning to the contractor list page, the UI refreshes to reflect newly added transactions.
+
+- 📥 **Excel Export Feature**  
+  Download all contractor transactions into an Excel sheet directly from the app with one tap.
+
+---
+
 ## 📲 Tech Stack
 
-- **Flutter** – Frontend UI
-- **Dart** – Programming Language
-- **Supabase** – Backend database and authentication
+- **Flutter** – Frontend UI  
+- **Dart** – Programming Language  
+- **Supabase** – Backend database and authentication  
 - **Material Design** – UI Components and Styling
 
 ---
@@ -39,7 +59,7 @@ A sleek and intuitive mobile application built with **Flutter** and powered by *
 
 ### Prerequisites
 
-- Flutter installed
+- Flutter installed  
 - A Supabase project (get your URL and anon key)
 
 ### Installation
