@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:untitled/screens/gave.dart';
 import 'package:untitled/screens/resources.dart';
 
 void main() {
@@ -57,10 +58,46 @@ class _personalPageState extends State<personalPage> {
             ),
               child: Column(
                 children: [
-                  Text('${widget.name}', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),),
-                  Text('${widget.name} ' + "Hello", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),),
-                  ElevatedButton(onPressed: (){}, child: Text("Add Credit")),
-                  ElevatedButton(onPressed: (){}, child: Text("Add Debit"))
+                  // Text('${widget.name}', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),),
+                  Text("Hello " + '${widget.name}' , style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),),
+                  Container(
+                    child:
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Align(
+                            alignment:Alignment.centerLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: ElevatedButton(onPressed: (){
+
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => gave(
+                                    id: widget.id,
+                                  )));
+
+                                }, child: Text("Gave"), style:
+                                  ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.black,
+                                    foregroundColor: Colors.white,
+                                  ),),
+                              )),
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: ElevatedButton(onPressed: (){}, child: Text("Receieved"), style:
+                                  ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.black,
+                                    foregroundColor: Colors.white,
+                                  ),),
+                              )),
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

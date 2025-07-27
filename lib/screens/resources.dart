@@ -171,7 +171,7 @@ class _resourcesState extends State<resources> {
                         elevation: 2,
                         child: ListTile(
                           title: Text(itemName),
-                          subtitle: Text("${c['price'] ?? 'No Price'}"),
+                          // subtitle: Text("${c['price'] ?? 'No Price'}"),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
@@ -179,17 +179,17 @@ class _resourcesState extends State<resources> {
                             },
                           ),
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => personalPage(
-                                  id: c['id'],
-                                  name: c['name'] ?? 'No Name',
-                                  phone: c['phone']?.toString() ?? 'No Phone',
-                                  area: c['area'] ?? 'No Area',
-                                ),
-                              ),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => personalPage(
+                            //       id: c['id'],
+                            //       name: c['name'] ?? 'No Name',
+                            //       phone: c['phone']?.toString() ?? 'No Phone',
+                            //       area: c['area'] ?? 'No Area',
+                            //     ),
+                            //   ),
+                            // );
                           },
                         ),
                       );
@@ -223,17 +223,17 @@ class _AddItemScreenState extends State<AddItemScreen> {
       final String itemName = _itemController.text.trim();
       final double? itemPrice = double.tryParse(_priceController.text.trim());
 
-      if (itemPrice == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter a valid price.')),
-        );
-        return;
-      }
+      // if (itemPrice == null) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(content: Text('Please enter a valid price.')),
+      //   );
+      //   return;
+      // }
 
       try {
         await Supabase.instance.client.from('items').insert({
           'item': itemName,
-          'price': itemPrice,
+          // 'price': itemPrice,
           // Add other fields if necessary, e.g., 'created_at': DateTime.now().toIso8601String(),
         });
 
@@ -284,23 +284,23 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              TextFormField(
-                controller: _priceController,
-                decoration: const InputDecoration(
-                  labelText: 'Price',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a price';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return 'Please enter a valid number';
-                  }
-                  return null;
-                },
-              ),
+              // TextFormField(
+              //   controller: _priceController,
+              //   decoration: const InputDecoration(
+              //     labelText: 'Price',
+              //     border: OutlineInputBorder(),
+              //   ),
+              //   keyboardType: TextInputType.number,
+              //   validator: (value) {
+              //     if (value == null || value.isEmpty) {
+              //       return 'Please enter a price';
+              //     }
+              //     if (double.tryParse(value) == null) {
+              //       return 'Please enter a valid number';
+              //     }
+              //     return null;
+              //   },
+              // ),
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: _addItem,
