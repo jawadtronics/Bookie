@@ -169,6 +169,7 @@ class _gaveState extends State<gave> {
                         'quantity': quantityValue,
                         'rate': rateValue,
                         'description': description.text,
+                        'transaction_type' : 1,
                       });
 
                       ScaffoldMessenger.of(context).showSnackBar(

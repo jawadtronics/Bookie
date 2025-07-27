@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:untitled/screens/gave.dart';
+import 'package:untitled/screens/received.dart';
 import 'package:untitled/screens/resources.dart';
 
 void main() {
@@ -28,6 +29,27 @@ class personalPage extends StatefulWidget {
 
 class _personalPageState extends State<personalPage> {
 
+  Future<List<Map<String, dynamic>>> fetchTransactions(int userId) async {
+    try {
+      final response = await Supabase.instance.client
+          .from('transactions')
+          .select()
+          .eq('user_id', userId)
+          .order('created_at', ascending: false); // Optional: latest first
+
+      return List<Map<String, dynamic>>.from(response);
+    } catch (e) {
+      print('Error fetching transactions: $e');
+      return [];
+    }
+  }
+  late Future<List<Map<String, dynamic>>> _transactionsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _transactionsFuture = fetchTransactions(widget.id); // replace with actual ID source
+  }
 
 
 
@@ -88,7 +110,11 @@ class _personalPageState extends State<personalPage> {
                             alignment: Alignment.centerRight,
                               child: Padding(
                                 padding: const EdgeInsets.all(15),
-                                child: ElevatedButton(onPressed: (){}, child: Text("Receieved"), style:
+                                child: ElevatedButton(onPressed: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ReceivedPage(
+                                    id : widget.id
+                                  )));
+                                }, child: Text("Receieved"), style:
                                   ElevatedButton.styleFrom(
                                     backgroundColor: Colors.black,
                                     foregroundColor: Colors.white,
@@ -97,11 +123,63 @@ class _personalPageState extends State<personalPage> {
                         )
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-          )
+          ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Text("Transactions", style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+              ),),
+            ),
+            Expanded(
+              child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: _transactionsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No transactions found.'));
+                  }
+
+                  final transactions = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: transactions.length,
+                    itemBuilder: (context, index) {
+                      final tx = transactions[index];
+                      final isReceived = tx['transaction_type'] == 2;
+
+                      return Card(
+                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        child: ListTile(
+                          title: Text(
+                            'Amount: ${tx['rec_amount']}',
+                            style: TextStyle(
+                              color: isReceived ? Colors.green : Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Description: ${tx['description'] ?? 'No description'}'),
+                              if (!isReceived)
+                                Text('Quantity: ${tx['quantity'] ?? 'N/A'}'),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+
           ],
         ),
       ),
